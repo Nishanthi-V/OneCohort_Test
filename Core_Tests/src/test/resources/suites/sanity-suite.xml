@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<!--
+  OneCohort — Sanity Test Suite
+  Purpose: Quickest health-check — just login flows.
+  Run: mvn test -DsuiteXmlFile=src/test/resources/suites/sanity-suite.xml
+-->
+<suite name="OneCohort Sanity Suite" verbose="1">
+
+    <listeners>
+        <listener class-name="com.cts.mfrp.onecohort.utils.ExtentReportListener"/>
+        <listener class-name="com.cts.mfrp.onecohort.listeners.TestListener"/>
+    </listeners>
+
+    <!-- Sanity: positive login for all roles + key validation alerts -->
+    <test name="Sanity - Login All Roles">
+        <classes>
+            <class name="com.cts.mfrp.onecohort.tests.LoginTest"/>
+        </classes>
+    </test>
+
+</suite>

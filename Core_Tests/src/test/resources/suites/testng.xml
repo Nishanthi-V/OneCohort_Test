@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<!--
+  ╔══════════════════════════════════════════════════════════════════════════╗
+  ║           OneCohort — Core Test Suite (15 tests)                        ║
+  ║           Covers 5 roles: Super Admin, Manager, Leader, Batch Owner, CR ║
+  ╠══════════════════════════════════════════════════════════════════════════╣
+  ║  Run full suite  :  mvn test                                             ║
+  ║  Run by role     :  mvn test -Dgroups=manager                           ║
+  ╚══════════════════════════════════════════════════════════════════════════╝
+-->
+<suite name="OneCohort Core Test Suite" verbose="1">
+
+    <listeners>
+        <listener class-name="com.cts.mfrp.onecohort.utils.ExtentReportListener"/>
+        <listener class-name="com.cts.mfrp.onecohort.listeners.TestListener"/>
+    </listeners>
+
+    <!-- SUPER ADMIN — 3 tests (TC-AUTH-001, TC-AUTH-002, TC-SC-004) -->
+    <test name="Super Admin Tests">
+        <classes>
+            <class name="com.cts.mfrp.onecohort.tests.LoginTest"/>
+            <class name="com.cts.mfrp.onecohort.tests.SystemConfigTest"/>
+        </classes>
+    </test>
+
+    <!-- MANAGER — 3 tests (TC-MGR-001, TC-MGR-002, TC-MGR-006) -->
+    <test name="Manager Tests">
+        <classes>
+            <class name="com.cts.mfrp.onecohort.tests.managers.ManagerTest"/>
+        </classes>
+    </test>
+
+    <!-- LEADER — 3 tests (TC-LEADER-001, TC-LEADER-002, TC-LEADER-003) -->
+    <test name="Leader Tests">
+        <classes>
+            <class name="com.cts.mfrp.onecohort.tests.leader.LeaderTest"/>
+        </classes>
+    </test>
+
+    <!-- BATCH OWNER — 3 tests (TC-BO-002, TC-BO-005, TC-BO-008) -->
+    <test name="Batch Owner Tests">
+        <classes>
+            <class name="com.cts.mfrp.onecohort.tests.batchowners.BatchOwnerTest"/>
+        </classes>
+    </test>
+
+    <!-- CR — 3 tests (TC-CR-004, TC-CR-006) + login validation from LoginTest -->
+    <test name="CR Tests">
+        <classes>
+            <class name="com.cts.mfrp.onecohort.tests.cr.CRTest"/>
+        </classes>
+    </test>
+
+</suite>

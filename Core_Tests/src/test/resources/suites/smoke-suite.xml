@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<!--
+  OneCohort — Smoke Test Suite
+  Purpose: Fast pre-commit gate. Verifies login and dashboard loads for every role.
+  Run: mvn test -DsuiteXmlFile=src/test/resources/suites/smoke-suite.xml
+       OR: mvn test -Dgroups=smoke
+-->
+<suite name="OneCohort Smoke Suite" verbose="1">
+
+    <listeners>
+        <listener class-name="com.cts.mfrp.onecohort.utils.ExtentReportListener"/>
+        <listener class-name="com.cts.mfrp.onecohort.listeners.TestListener"/>
+    </listeners>
+
+    <!-- Login: positive flows for all roles -->
+    <test name="Smoke - Login">
+        <groups>
+            <run>
+                <include name="smoke"/>
+            </run>
+        </groups>
+        <classes>
+            <class name="com.cts.mfrp.onecohort.tests.LoginTest"/>
+        </classes>
+    </test>
+
+    <!-- Super Admin dashboard -->
+    <test name="Smoke - Super Admin">
+        <groups>
+            <run>
+                <include name="smoke"/>
+            </run>
+        </groups>
+        <classes>
+            <class name="com.cts.mfrp.onecohort.tests.SuperAdminTest"/>
+        </classes>
+    </test>
+
+    <!-- Manager dashboard -->
+    <test name="Smoke - Manager">
+        <groups>
+            <run>
+                <include name="smoke"/>
+            </run>
+        </groups>
+        <classes>
+            <class name="com.cts.mfrp.onecohort.tests.managers.ManagerTest"/>
+        </classes>
+    </test>
+
+    <!-- Leader dashboard -->
+    <test name="Smoke - Leader">
+        <groups>
+            <run>
+                <include name="smoke"/>
+            </run>
+        </groups>
+        <classes>
+            <class name="com.cts.mfrp.onecohort.tests.leader.LeaderTest"/>
+        </classes>
+    </test>
+
+    <!-- Batch Owner dashboard -->
+    <test name="Smoke - Batch Owner">
+        <groups>
+            <run>
+                <include name="smoke"/>
+            </run>
+        </groups>
+        <classes>
+            <class name="com.cts.mfrp.onecohort.tests.batchowners.BatchOwnerTest"/>
+        </classes>
+    </test>
+
+    <!-- CR dashboard -->
+    <test name="Smoke - CR">
+        <groups>
+            <run>
+                <include name="smoke"/>
+            </run>
+        </groups>
+        <classes>
+            <class name="com.cts.mfrp.onecohort.tests.cr.CRTest"/>
+        </classes>
+    </test>
+
+</suite>
