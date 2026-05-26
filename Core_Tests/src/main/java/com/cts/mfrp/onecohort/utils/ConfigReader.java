@@ -23,7 +23,7 @@ public class ConfigReader {
         }
     }
 
-    /** Switch to staging config at runtime: ConfigReader.loadEnv("staging") */
+    /** Switch to an alternate environment config at runtime: ConfigReader.loadEnv("staging") */
     public static void loadEnv(String env) {
         loadConfig("src/test/resources/config-" + env + ".properties");
     }
@@ -34,16 +34,20 @@ public class ConfigReader {
         return value.trim();
     }
 
-    public static String getBrowser()           { return get(AppConstants.PROP_BROWSER); }
-    public static String getBaseUrl()           { return get(AppConstants.PROP_BASE_URL); }
-    public static String getSuperAdminUserId()  { return get("super.admin.user.id"); }
-    public static String getLeaderUserId()      { return get("leader.user.id"); }
-    public static String getManagerUserId()     { return get("manager.user.id"); }
-    public static String getValidServiceLineId(){ return get("valid.service.line.id"); }
-    public static String getValidPocId()        { return get("valid.poc.id"); }
-    public static String getValidCohortId()     { return get("valid.cohort.id"); }
-    public static boolean isHeadless()          { return Boolean.parseBoolean(get(AppConstants.PROP_HEADLESS)); }
-    public static int getImplicitWait()         { return Integer.parseInt(get(AppConstants.PROP_IMPLICIT_WAIT)); }
-    public static int getExplicitWait()         { return Integer.parseInt(get(AppConstants.PROP_EXPLICIT_WAIT)); }
+    // ── Browser / environment ─────────────────────────────────────────────────
+    public static String  getBrowser()      { return get(AppConstants.PROP_BROWSER); }
+    public static String  getBaseUrl()      { return get(AppConstants.PROP_BASE_URL); }
+    public static boolean isHeadless()      { return Boolean.parseBoolean(get(AppConstants.PROP_HEADLESS)); }
+    public static int     getImplicitWait() { return Integer.parseInt(get(AppConstants.PROP_IMPLICIT_WAIT)); }
+    public static int     getExplicitWait() { return Integer.parseInt(get(AppConstants.PROP_EXPLICIT_WAIT)); }
+    public static int     getPageLoadTimeout() { return Integer.parseInt(get(AppConstants.PROP_PAGE_LOAD_TIMEOUT)); }
 
+    // ── User credential helpers (kept for backward compatibility;
+    //    prefer TestDataProvider for Excel-driven data) ────────────────────────
+    public static String getSuperAdminUserId()   { return get(AppConstants.PROP_SUPER_ADMIN_USER_ID); }
+    public static String getLeaderUserId()       { return get(AppConstants.PROP_LEADER_USER_ID); }
+    public static String getManagerUserId()      { return get(AppConstants.PROP_MANAGER_USER_ID); }
+    public static String getValidServiceLineId() { return get(AppConstants.PROP_VALID_SERVICE_LINE); }
+    public static String getValidPocId()         { return get(AppConstants.PROP_VALID_POC_ID); }
+    public static String getValidCohortId()      { return get(AppConstants.PROP_VALID_COHORT_ID); }
 }

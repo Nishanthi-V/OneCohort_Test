@@ -1,5 +1,6 @@
 package com.cts.mfrp.onecohort.stepdefinitions;
 
+import com.cts.mfrp.onecohort.constants.AppConstants;
 import com.cts.mfrp.onecohort.context.TestContext;
 import com.cts.mfrp.onecohort.pages.managers.ManagerDashboardPage;
 import com.cts.mfrp.onecohort.pages.batchowners.BatchOwnerDashboardPage;
@@ -32,24 +33,21 @@ public class ManagerSteps {
     }
 
     /**
-     * FIX: Manager cohorts URL is /manage-cohorts not /cohorts
-     * Batch Owner cohorts URL is /cohorts
-     * So we check the current role from URL and wait for the correct pattern.
+     * Cohorts nav: Manager → /manage-cohorts, Batch Owner → /cohorts.
+     * URL segments come from AppConstants — no inline string literals.
      */
     @When("I click the Cohorts nav link")
     public void iClickTheCohortsNavLink() {
         String currentUrl = context.driver.getCurrentUrl();
 
-        if (currentUrl.contains("/batch-owner/")) {
-            // Batch Owner: clicks sidebar cohorts link, URL becomes /cohorts
+        if (currentUrl.contains(AppConstants.URL_BATCH_OWNER)) {
             BatchOwnerDashboardPage boPage = new BatchOwnerDashboardPage(context.driver);
             boPage.getSidebarCohortsLinkElement().click();
-            context.getWait().until(ExpectedConditions.urlContains("/cohorts"));
+            context.getWait().until(ExpectedConditions.urlContains(AppConstants.URL_COHORTS));
         } else {
-            // Manager: clicks manage cohorts nav, URL becomes /manage-cohorts
             if (dashPage == null) dashPage = new ManagerDashboardPage(context.driver);
             dashPage.clickManageCohortsNav();
-            context.getWait().until(ExpectedConditions.urlContains("/manage-cohorts"));
+            context.getWait().until(ExpectedConditions.urlContains(AppConstants.URL_MANAGE_COHORTS));
         }
     }
 
@@ -57,6 +55,6 @@ public class ManagerSteps {
     public void iClickTheDashboardNavLink() {
         if (dashPage == null) dashPage = new ManagerDashboardPage(context.driver);
         dashPage.clickDashboardNav();
-        context.getWait().until(ExpectedConditions.urlContains("/dashboard"));
+        context.getWait().until(ExpectedConditions.urlContains(AppConstants.URL_DASHBOARD));
     }
 }

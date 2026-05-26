@@ -1,8 +1,10 @@
 package com.cts.mfrp.onecohort.stepdefinitions;
 
+import com.cts.mfrp.onecohort.constants.AppConstants;
 import com.cts.mfrp.onecohort.context.TestContext;
 import com.cts.mfrp.onecohort.pages.cr.CRDashboardPage;
 import com.cts.mfrp.onecohort.utils.ConfigReader;
+import com.cts.mfrp.onecohort.utils.TestDataProvider;
 import io.cucumber.java.en.*;
 import org.openqa.selenium.WebElement;
 import org.testng.Assert;
@@ -19,14 +21,20 @@ public class CRSteps {
         this.context = context;
     }
 
+    /**
+     * Cohort ID is read from LoginData.xlsx (CohortId column, CR row)
+     * via TestDataProvider — not from config.properties.
+     */
     private CRDashboardPage getCrPage() {
         if (crPage == null) {
-            crPage = new CRDashboardPage(context.driver, ConfigReader.getValidCohortId());
+            String cohortId = TestDataProvider.getCohortIdForRole(AppConstants.ROLE_CR);
+            crPage = new CRDashboardPage(context.driver, cohortId);
         }
         return crPage;
     }
 
-    // TC-CR-004
+    // TC-CR-004 ── Read-only assertion ────────────────────────────────────────
+
     @Then("no CRUD buttons should be visible on the dashboard")
     public void noCrudButtonsShouldBeVisible() {
         context.driver.manage().timeouts()
@@ -43,7 +51,8 @@ public class CRSteps {
         }
     }
 
-    // TC-CR-006
+    // TC-CR-006 ── Evaluation section visibility ───────────────────────────────
+
     @Then("the {string} evaluation section should be visible")
     public void theEvaluationSectionShouldBeVisible(String sectionName) {
         boolean visible = switch (sectionName) {

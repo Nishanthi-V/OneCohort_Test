@@ -3,11 +3,11 @@ Feature: CR Dashboard functionality
   I want to log in and view my cohort dashboard
   So that I can track training progress in read-only mode
 
+  # Background: All credentials (UserId, CohortId) are read from LoginData.xlsx.
+  # No hardcoded values appear in this feature file.
   Background:
     Given I am on the login page
-    When I enter user ID "SA001" and select role "CR"
-    And I enter cohort ID "INTCLD024"
-    And I click the Login button
+    When I login with credentials for "CR"
     Then I should be redirected to the CR dashboard
 
   # TC-CR-004

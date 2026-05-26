@@ -2,6 +2,8 @@ package com.cts.mfrp.onecohort.pages;
 
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
+import org.openqa.selenium.ElementClickInterceptedException;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -92,6 +94,14 @@ public class LoginPage {
         }
 
         select.selectByVisibleText(serviceLineId);
+
+        // After making a selection the native <select> dropdown closes automatically,
+        // but in headless Chrome its overlay can linger in the rendering tree and
+        // intercept the next click (e.g. on the Login button).
+        // Sending a blur() via JS ensures the element releases focus immediately.
+        ((JavascriptExecutor) driver).executeScript(
+                "arguments[0].blur();", driver.findElement(serviceLineDropdown));
+
         return this;
     }
 
@@ -110,8 +120,22 @@ public class LoginPage {
     }
 
     public void clickLoginButton() {
-        wait.until(ExpectedConditions.elementToBeClickable(loginButton));
-        driver.findElement(loginButton).click();
+        WebElement btn = wait.until(ExpectedConditions.elementToBeClickable(loginButton));
+
+        // Scroll the button into the centre of the viewport so no sticky header
+        // or dropdown overlay can intercept the click — essential in headless mode.
+        ((JavascriptExecutor) driver).executeScript(
+                "arguments[0].scrollIntoView({block:'center', inline:'center'});", btn);
+
+        try {
+            btn.click();
+        } catch (ElementClickInterceptedException e) {
+            // Fallback: if the element is still obscured (e.g. dropdown overlay
+            // has not fully dismissed in headless rendering), use a JS click which
+            // bypasses the Z-index layer entirely.
+            System.out.println("[LoginPage] Regular click intercepted — retrying with JS click.");
+            ((JavascriptExecutor) driver).executeScript("arguments[0].click();", btn);
+        }
     }
 
     public String acceptAlertAndGetMessage() {

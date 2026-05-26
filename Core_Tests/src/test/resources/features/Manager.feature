@@ -3,11 +3,11 @@ Feature: Manager Dashboard functionality
   I want to log in and access my dashboard
   So that I can view service lines, learning paths and cohort data
 
+  # Background: All credentials (UserId, ServiceLine) are read from LoginData.xlsx.
+  # No hardcoded values appear in this feature file.
   Background:
     Given I am on the login page
-    When I enter user ID "MG001" and select role "Manager"
-    And I select service line "Cloud & Data Enterprise (SRV-10002)"
-    And I click the Login button
+    When I login with credentials for "Manager"
     Then I should be redirected to the manager dashboard
 
   # TC-MGR-001
@@ -26,8 +26,10 @@ Feature: Manager Dashboard functionality
     Then the URL should contain "/dashboard"
 
   # TC-MGR-006
+  # Validation: Manager role requires a Service Line.
+  # UserId is read from LoginData.xlsx; Service Line is intentionally omitted.
   Scenario: Manager login without selecting a Service Line shows validation alert
     Given I am on the login page
-    When I enter user ID "MG001" and select role "Manager"
+    When I login without service line for "Manager"
     And I click the Login button
     Then I should see alert "Please select a Service Line"
