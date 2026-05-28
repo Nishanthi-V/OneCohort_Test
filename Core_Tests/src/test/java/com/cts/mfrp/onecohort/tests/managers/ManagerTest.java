@@ -8,16 +8,29 @@ import com.cts.mfrp.onecohort.utils.ConfigReader;
 import com.cts.mfrp.onecohort.utils.ExtentReportListener;
 import com.cts.mfrp.onecohort.utils.TestDataProvider;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.testng.Assert;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
+import org.testng.asserts.SoftAssert;
 
 @Listeners(ExtentReportListener.class)
 @Test(groups = {"smoke", "regression", "manager"})
 public class ManagerTest extends BaseClassTest {
 
     private ManagerDashboardPage dashPage;
+    private SoftAssert softAssert;
+
+    @BeforeMethod(alwaysRun = true)
+    public void initSoftAssert() {
+        softAssert = new SoftAssert();
+    }
+
+    @AfterMethod(alwaysRun = true)
+    public void assertSoftAssertions() {
+        softAssert.assertAll();
+    }
 
     @BeforeClass(alwaysRun = true, dependsOnMethods = "setUpDriver")
     public void loginAsManager() {
@@ -41,21 +54,21 @@ public class ManagerTest extends BaseClassTest {
     @Test(priority = 1, description = "TC-MGR-001: Manager dashboard loads with correct URL, role badge and KPI cards")
     public void testManagerDashboardLoads() {
         String url = driver.getCurrentUrl();
-        Assert.assertTrue(url.contains(AppConstants.URL_MANAGER),
+        softAssert.assertTrue(url.contains(AppConstants.URL_MANAGER),
                 "URL should contain " + AppConstants.URL_MANAGER + ". Got: " + url);
-        Assert.assertTrue(url.contains(AppConstants.URL_DASHBOARD),
+        softAssert.assertTrue(url.contains(AppConstants.URL_DASHBOARD),
                 "URL should contain " + AppConstants.URL_DASHBOARD + ". Got: " + url);
 
         String roleText = dashPage.getRoleText();
-        Assert.assertEquals(roleText, AppConstants.ROLE_MANAGER,
+        softAssert.assertEquals(roleText, AppConstants.ROLE_MANAGER,
                 "Role badge should display '" + AppConstants.ROLE_MANAGER + "'");
 
         // KPI card names sourced from AppConstants — no inline strings
-        Assert.assertTrue(dashPage.isKpiCardPresent(AppConstants.KPI_SERVICE_LINES),
+        softAssert.assertTrue(dashPage.isKpiCardPresent(AppConstants.KPI_SERVICE_LINES),
                 AppConstants.KPI_SERVICE_LINES + " KPI card missing");
-        Assert.assertTrue(dashPage.isKpiCardPresent(AppConstants.KPI_LEARNING_PATHS),
+        softAssert.assertTrue(dashPage.isKpiCardPresent(AppConstants.KPI_LEARNING_PATHS),
                 AppConstants.KPI_LEARNING_PATHS + " KPI card missing");
-        Assert.assertTrue(dashPage.isKpiCardPresent(AppConstants.KPI_AVG_COMPLETION_RATE),
+        softAssert.assertTrue(dashPage.isKpiCardPresent(AppConstants.KPI_AVG_COMPLETION_RATE),
                 AppConstants.KPI_AVG_COMPLETION_RATE + " KPI card missing");
 
         System.out.println("PASS - Manager dashboard loaded correctly. URL: " + url);
@@ -69,14 +82,14 @@ public class ManagerTest extends BaseClassTest {
         wait.until(ExpectedConditions.not(ExpectedConditions.urlContains(AppConstants.URL_DASHBOARD)));
 
         String urlAfterCohorts = driver.getCurrentUrl();
-        Assert.assertTrue(urlAfterCohorts.contains(AppConstants.URL_MANAGER),
+        softAssert.assertTrue(urlAfterCohorts.contains(AppConstants.URL_MANAGER),
                 "After clicking Cohorts, URL should still be under "
                 + AppConstants.URL_MANAGER + ". Got: " + urlAfterCohorts);
         System.out.println("PASS - Navigated to cohorts section. URL: " + urlAfterCohorts);
 
         dashPage.clickDashboardNav();
         wait.until(ExpectedConditions.urlContains(AppConstants.URL_DASHBOARD));
-        Assert.assertTrue(driver.getCurrentUrl().contains(AppConstants.URL_DASHBOARD),
+        softAssert.assertTrue(driver.getCurrentUrl().contains(AppConstants.URL_DASHBOARD),
                 "Should return to dashboard after clicking Dashboard nav");
 
         dashPage = new ManagerDashboardPage(driver);
@@ -97,7 +110,7 @@ public class ManagerTest extends BaseClassTest {
                  .clickLoginButton();
 
         String alertText = loginPage.acceptAlertAndGetMessage();
-        Assert.assertEquals(alertText, AppConstants.ALERT_SELECT_SERVICE_LINE,
+        softAssert.assertEquals(alertText, AppConstants.ALERT_SELECT_SERVICE_LINE,
                 "Alert should say: " + AppConstants.ALERT_SELECT_SERVICE_LINE);
         System.out.println("PASS - Validation alert shown for missing Service Line: " + alertText);
     }

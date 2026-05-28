@@ -105,4 +105,53 @@ public class AppConstants {
     // ── Sidebar navigation link labels ────────────────────────────────────────
     public static final String NAV_COHORTS   = "Cohorts";
     public static final String NAV_DASHBOARD = "Dashboard";
+
+    // ── Cohort Management — menu label, URL segment, heading ─────────────────
+    public static final String MENU_COHORT_MANAGEMENT    = "Cohort Management";
+    public static final String URL_COHORT_MANAGEMENT     = "cohort";
+    public static final String HEADING_COHORT_MANAGEMENT = "Cohort Management";
+
+    // ── Cohort Management — test data file (classpath-relative for POI) ──────
+    public static final String COHORT_MGMT_TESTDATA_CLASSPATH =
+            "testdata/CohortManagementTestData.xlsx";
+
+    // ── Cohort Management — Excel sheet names ─────────────────────────────────
+    public static final String SHEET_SEARCH_COHORT  = "SearchCohort";
+    public static final String SHEET_FILTER_STATUS  = "FilterStatus";
+    public static final String SHEET_CREATE_COHORT  = "CreateCohort";
+
+    // ── Cohort Management — Excel column names ────────────────────────────────
+    public static final String COL_SEARCH_KEYWORD    = "SearchKeyword";
+    public static final String COL_EXPECTED_MIN_ROWS = "ExpectedMinRows";
+    public static final String COL_STATUS_VALUE      = "StatusValue";
+    public static final String COL_SHOULD_EXIST      = "ShouldExistInDropdown";
+    public static final String COL_SCENARIO_ID       = "ScenarioId";
+    public static final String COL_SCENARIO_TYPE     = "ScenarioType";
+    public static final String COL_LEARNING_PATH     = "LearningPath";
+    public static final String COL_EMPLOYMENT_TYPE   = "EmploymentType";
+    public static final String COL_START_DATE_OFFSET = "StartDateOffset";
+    public static final String COL_END_DATE_OFFSET   = "EndDateOffset";
+    public static final String COL_EXPECTED_OUTCOME  = "ExpectedOutcome";
+
+    // ── Cohort Management — scenario type values ──────────────────────────────
+    public static final String SCENARIO_HAPPY_PATH = "HAPPY_PATH";
+    public static final String SCENARIO_BUG_DATE   = "BUG_DATE";
+    public static final String SCENARIO_BUG_SL     = "BUG_SL";
+
+    // ── Cohort Management — status filter values ──────────────────────────────
+    public static final String STATUS_PLANNING     = "Planning";
+    public static final String STATUS_ACTIVE       = "Active";
+    public static final String STATUS_COMPLETED    = "Completed";
+    public static final String STATUS_UPCOMING     = "Upcoming";
+    public static final String STATUS_ALL_STATUSES = "All Statuses";
+
+    // ── Cohort Management — expected table column labels (lowercase) ──────────
+    public static final String COHORT_COL_ID         = "cohort id";
+    public static final String COHORT_COL_NAME       = "cohort name";
+    public static final String COHORT_COL_STATUS     = "status";
+    public static final String COHORT_COL_START_DATE = "start date";
+    public static final String COHORT_COL_ACTIONS    = "actions";
+
+    // ── Cohort Management — assertion thresholds ──────────────────────────────
+    public static final int MIN_FILTER_DROPDOWNS = 2;
 }

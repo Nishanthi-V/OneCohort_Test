@@ -52,4 +52,13 @@
         </classes>
     </test>
 
+    <!-- COHORT MANAGEMENT — 17 tests (TC-COHORT-001 to TC-COHORT-017)     -->
+    <!-- TC-015 and TC-016 are known-bug tests; run with -Dgroups=bug       -->
+    <!-- to target bug regressions or -Dgroups="regression,!bug" to skip.  -->
+    <test name="Cohort Management Tests">
+        <classes>
+            <class name="com.cts.mfrp.onecohort.tests.cohort.CohortManagementTest"/>
+        </classes>
+    </test>
+
 </suite>

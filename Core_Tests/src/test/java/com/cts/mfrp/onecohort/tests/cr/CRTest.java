@@ -9,10 +9,12 @@ import com.cts.mfrp.onecohort.utils.ExtentReportListener;
 import com.cts.mfrp.onecohort.utils.TestDataProvider;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.testng.Assert;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
+import org.testng.asserts.SoftAssert;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,6 +24,17 @@ import java.util.stream.Collectors;
 public class CRTest extends BaseClassTest {
 
     private CRDashboardPage crPage;
+    private SoftAssert softAssert;
+
+    @BeforeMethod(alwaysRun = true)
+    public void initSoftAssert() {
+        softAssert = new SoftAssert();
+    }
+
+    @AfterMethod(alwaysRun = true)
+    public void assertSoftAssertions() {
+        softAssert.assertAll();
+    }
 
     @BeforeClass(alwaysRun = true, dependsOnMethods = "setUpDriver")
     public void loginAsCR() {
@@ -52,10 +65,10 @@ public class CRTest extends BaseClassTest {
             String foundButtons = crudButtons.stream()
                     .map(btn -> "[" + btn.getText() + "]")
                     .collect(Collectors.joining(" "));
-            Assert.fail("CR role should be read-only. Found CRUD buttons: " + foundButtons);
+            softAssert.fail("CR role should be read-only. Found CRUD buttons: " + foundButtons);
+        } else {
+            System.out.println("PASS - No Create/Edit/Delete buttons found. CR access is correctly read-only.");
         }
-
-        System.out.println("PASS - No Create/Edit/Delete buttons found. CR access is correctly read-only.");
     }
 
     // ── TC-CR-006 ──────────────────────────────────────────────────────────────
@@ -63,11 +76,11 @@ public class CRTest extends BaseClassTest {
     @Test(priority = 2, description = "TC-CR-006: Qualifier, Interim and Final evaluation sections are visible on CR dashboard")
     public void testEvaluationsVisible() {
         // Section names from AppConstants — no inline strings
-        Assert.assertTrue(crPage.isQualifierExamVisible(),
+        softAssert.assertTrue(crPage.isQualifierExamVisible(),
                 AppConstants.EVAL_QUALIFIER + " Exam section should be visible on the CR dashboard");
-        Assert.assertTrue(crPage.isInterimEvaluationVisible(),
+        softAssert.assertTrue(crPage.isInterimEvaluationVisible(),
                 AppConstants.EVAL_INTERIM + " Evaluation section should be visible on the CR dashboard");
-        Assert.assertTrue(crPage.isFinalEvaluationVisible(),
+        softAssert.assertTrue(crPage.isFinalEvaluationVisible(),
                 AppConstants.EVAL_FINAL + " Evaluation section should be visible on the CR dashboard");
 
         System.out.println("PASS - All 3 evaluation sections visible on CR dashboard ("

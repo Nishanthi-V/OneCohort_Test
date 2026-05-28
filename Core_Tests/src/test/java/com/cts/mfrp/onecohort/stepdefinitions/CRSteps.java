@@ -7,7 +7,7 @@ import com.cts.mfrp.onecohort.utils.ConfigReader;
 import com.cts.mfrp.onecohort.utils.TestDataProvider;
 import io.cucumber.java.en.*;
 import org.openqa.selenium.WebElement;
-import org.testng.Assert;
+// SoftAssert accessed via context.softAssert (injected by Hooks.setUp)
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -47,7 +47,7 @@ public class CRSteps {
             String found = crudButtons.stream()
                     .map(btn -> "[" + btn.getText() + "]")
                     .collect(Collectors.joining(" "));
-            Assert.fail("CR role should be read-only. Found CRUD buttons: " + found);
+            context.softAssert.fail("CR role should be read-only. Found CRUD buttons: " + found);
         }
     }
 
@@ -61,7 +61,7 @@ public class CRSteps {
             case "Final"     -> getCrPage().isFinalEvaluationVisible();
             default -> throw new IllegalArgumentException("Unknown section: " + sectionName);
         };
-        Assert.assertTrue(visible,
+        context.softAssert.assertTrue(visible,
                 sectionName + " evaluation section should be visible on the CR dashboard");
     }
 }

@@ -9,10 +9,12 @@ import com.cts.mfrp.onecohort.utils.ConfigReader;
 import com.cts.mfrp.onecohort.utils.ExtentReportListener;
 import com.cts.mfrp.onecohort.utils.TestDataProvider;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.testng.Assert;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
+import org.testng.asserts.SoftAssert;
 
 @Listeners(ExtentReportListener.class)
 @Test(groups = {"regression", "superadmin", "systemconfig"})
@@ -22,6 +24,17 @@ public class SystemConfigTest extends BaseClassTest {
     private static final String MENU_LABEL_SYSTEM_CONFIG = "System Config";
 
     private SystemConfigPage systemConfigPage;
+    private SoftAssert softAssert;
+
+    @BeforeMethod(alwaysRun = true)
+    public void initSoftAssert() {
+        softAssert = new SoftAssert();
+    }
+
+    @AfterMethod(alwaysRun = true)
+    public void assertSoftAssertions() {
+        softAssert.assertAll();
+    }
 
     @BeforeClass(alwaysRun = true, dependsOnMethods = "setUpDriver")
     public void loginAndNavigateToSystemConfig() {
@@ -47,7 +60,7 @@ public class SystemConfigTest extends BaseClassTest {
             + AppConstants.SYSTEM_CONFIG_CARD_COUNT + " configuration category cards")
     public void testConfigCardCountIsExactlyFour() {
         int cardCount = systemConfigPage.getConfigCardCount();
-        Assert.assertEquals(cardCount, AppConstants.SYSTEM_CONFIG_CARD_COUNT,
+        softAssert.assertEquals(cardCount, AppConstants.SYSTEM_CONFIG_CARD_COUNT,
                 "System Config page should show exactly "
                 + AppConstants.SYSTEM_CONFIG_CARD_COUNT
                 + " config category cards. Found: " + cardCount);

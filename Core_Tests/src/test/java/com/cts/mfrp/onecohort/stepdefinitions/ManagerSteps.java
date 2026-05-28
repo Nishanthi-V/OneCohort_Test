@@ -6,7 +6,7 @@ import com.cts.mfrp.onecohort.pages.managers.ManagerDashboardPage;
 import com.cts.mfrp.onecohort.pages.batchowners.BatchOwnerDashboardPage;
 import io.cucumber.java.en.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.testng.Assert;
+// SoftAssert accessed via context.softAssert (injected by Hooks.setUp)
 
 public class ManagerSteps {
 
@@ -21,14 +21,14 @@ public class ManagerSteps {
     public void theRoleBadgeShouldDisplay(String expectedRole) {
         dashPage = new ManagerDashboardPage(context.driver);
         dashPage.waitForDashboardLoad();
-        Assert.assertEquals(dashPage.getRoleText(), expectedRole,
+        context.softAssert.assertEquals(dashPage.getRoleText(), expectedRole,
                 "Role badge should display '" + expectedRole + "'");
     }
 
     @Then("the KPI card {string} should be visible")
     public void theKpiCardShouldBeVisible(String cardName) {
         if (dashPage == null) dashPage = new ManagerDashboardPage(context.driver);
-        Assert.assertTrue(dashPage.isKpiCardPresent(cardName),
+        context.softAssert.assertTrue(dashPage.isKpiCardPresent(cardName),
                 "KPI card '" + cardName + "' should be visible");
     }
 

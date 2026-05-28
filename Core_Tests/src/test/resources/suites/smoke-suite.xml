@@ -85,4 +85,17 @@
         </classes>
     </test>
 
+    <!-- Cohort Management — smoke subset (TC-001, 003, 006, 013, 017) -->
+    <test name="Smoke - Cohort Management">
+        <groups>
+            <run>
+                <include name="smoke"/>
+                <exclude name="bug"/>
+            </run>
+        </groups>
+        <classes>
+            <class name="com.cts.mfrp.onecohort.tests.cohort.CohortManagementTest"/>
+        </classes>
+    </test>
+
 </suite>

@@ -8,7 +8,7 @@ import io.cucumber.java.en.When;
 import org.openqa.selenium.By;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.testng.Assert;
+// SoftAssert accessed via context.softAssert (injected by Hooks.setUp)
 
 import java.time.Duration;
 
@@ -58,7 +58,7 @@ public class SuperAdminSteps {
         int cardCount = systemConfigPage.getConfigCardCount();
         System.out.println("[SuperAdminSteps] Config cards found: " + cardCount);
 
-        Assert.assertEquals(cardCount, AppConstants.SYSTEM_CONFIG_CARD_COUNT,
+        context.softAssert.assertEquals(cardCount, AppConstants.SYSTEM_CONFIG_CARD_COUNT,
                 "System Config should show exactly " + AppConstants.SYSTEM_CONFIG_CARD_COUNT
                 + " cards. Found: " + cardCount);
         System.out.println("PASS - System Config shows exactly "

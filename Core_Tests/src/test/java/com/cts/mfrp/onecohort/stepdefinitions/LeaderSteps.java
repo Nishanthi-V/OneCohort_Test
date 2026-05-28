@@ -3,7 +3,7 @@ package com.cts.mfrp.onecohort.stepdefinitions;
 import com.cts.mfrp.onecohort.context.TestContext;
 import com.cts.mfrp.onecohort.pages.leader.LeaderDashboardPage;
 import io.cucumber.java.en.*;
-import org.testng.Assert;
+// SoftAssert accessed via context.softAssert (injected by Hooks.setUp)
 
 import java.util.List;
 
@@ -27,21 +27,21 @@ public class LeaderSteps {
     @Then("the leader role badge should be visible")
     public void theLeaderRoleBadgeShouldBeVisible() {
         String badge = getDashPage().getLeaderBadgeText();
-        Assert.assertTrue(badge.toLowerCase().contains("leader"),
+        context.softAssert.assertTrue(badge.toLowerCase().contains("leader"),
                 "Role badge should display 'Leader'. Got: " + badge);
     }
 
     @Then("the dashboard should have KPI cards")
     public void theDashboardShouldHaveKpiCards() {
         List<String> kpiTitles = getDashPage().getKpiCardTitles();
-        Assert.assertFalse(kpiTitles.isEmpty(),
+        context.softAssert.assertFalse(kpiTitles.isEmpty(),
                 "Dashboard should have KPI cards. Found: " + kpiTitles);
     }
 
     @Then("the sidebar should have at least {int} navigation links")
     public void theSidebarShouldHaveAtLeastNavLinks(int count) {
         List<String> navLinks = getDashPage().getNavLinkTexts();
-        Assert.assertTrue(navLinks.size() >= count,
+        context.softAssert.assertTrue(navLinks.size() >= count,
                 "Sidebar should have at least " + count + " links. Found: " + navLinks);
     }
 
@@ -50,7 +50,7 @@ public class LeaderSteps {
         List<String> navLinks = getDashPage().getNavLinkTexts();
         boolean found = navLinks.stream()
                 .anyMatch(link -> link.toLowerCase().contains(linkText.toLowerCase()));
-        Assert.assertTrue(found,
+        context.softAssert.assertTrue(found,
                 "Sidebar should contain '" + linkText + "' link. Found: " + navLinks);
     }
 }

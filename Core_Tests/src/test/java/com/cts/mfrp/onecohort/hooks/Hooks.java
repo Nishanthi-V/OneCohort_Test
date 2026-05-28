@@ -10,6 +10,7 @@ import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.testng.asserts.SoftAssert;
 
 import java.time.Duration;
 
@@ -23,28 +24,19 @@ public class Hooks {
 
     @Before
     public void setUp() {
+        // Fresh SoftAssert for every scenario — collects all failures until @After flushes them
+        context.softAssert = new SoftAssert();
+
         WebDriverManager.chromedriver().setup();
         ChromeOptions opts = new ChromeOptions();
 
-        // Always set an explicit window size so the layout is identical in
-        // both headed and headless modes (maximise() is a no-op in headless).
-        opts.addArguments("--window-size=1920,1080");
-        opts.addArguments("--no-sandbox");
-        opts.addArguments("--disable-dev-shm-usage");   // prevents shared-memory crashes
-        opts.addArguments("--disable-extensions");
-        opts.addArguments("--disable-infobars");
 
         if (ConfigReader.isHeadless()) {
-            // "--headless=new" (Chrome 112+) renders identically to headed mode,
-            // unlike the legacy "--headless" flag which had different viewport
-            // behaviour and caused dropdown overlays to block subsequent clicks.
             opts.addArguments("--headless=new");
         }
 
         context.driver = new ChromeDriver(opts);
 
-        // maximize() works in headed mode; in headless the --window-size arg above
-        // already guarantees 1920x1080 — calling maximize() is harmless either way.
         context.driver.manage().window().maximize();
         context.driver.manage().timeouts()
                 .implicitlyWait(Duration.ofSeconds(ConfigReader.getImplicitWait()));
@@ -52,14 +44,33 @@ public class Hooks {
 
     @After
     public void tearDown(Scenario scenario) {
-        // Take screenshot on failure
-        if (scenario.isFailed() && context.driver != null) {
+        // Flush all accumulated soft assertions.
+        // Any failures are captured here so ALL assertion messages appear in one report,
+        // regardless of which step they were recorded in.
+        AssertionError softAssertError = null;
+        try {
+            context.softAssert.assertAll();
+        } catch (AssertionError e) {
+            softAssertError = e;
+            // Attach the full failure detail as plain text for the Cucumber HTML report
+            scenario.attach(e.getMessage().getBytes(),
+                    "text/plain", "Soft Assertion Failures");
+        }
+
+        // Take screenshot if any step failed OR if soft assertions failed
+        if ((scenario.isFailed() || softAssertError != null) && context.driver != null) {
             byte[] screenshot = ((TakesScreenshot) context.driver)
                     .getScreenshotAs(OutputType.BYTES);
             scenario.attach(screenshot, "image/png", scenario.getName());
         }
+
         if (context.driver != null) {
             context.driver.quit();
+        }
+
+        // Re-throw so Cucumber marks the scenario as FAILED in its reports
+        if (softAssertError != null) {
+            throw softAssertError;
         }
     }
 }

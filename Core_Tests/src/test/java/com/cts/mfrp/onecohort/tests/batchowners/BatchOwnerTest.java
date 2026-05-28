@@ -9,10 +9,12 @@ import com.cts.mfrp.onecohort.utils.ExtentReportListener;
 import com.cts.mfrp.onecohort.utils.TestDataProvider;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.testng.Assert;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
+import org.testng.asserts.SoftAssert;
 
 import java.time.Duration;
 import java.util.List;
@@ -22,6 +24,17 @@ import java.util.List;
 public class BatchOwnerTest extends BaseClassTest {
 
     private BatchOwnerDashboardPage dashPage;
+    private SoftAssert softAssert;
+
+    @BeforeMethod(alwaysRun = true)
+    public void initSoftAssert() {
+        softAssert = new SoftAssert();
+    }
+
+    @AfterMethod(alwaysRun = true)
+    public void assertSoftAssertions() {
+        softAssert.assertAll();
+    }
 
     @BeforeClass(alwaysRun = true, dependsOnMethods = "setUpDriver")
     public void loginAsBatchOwner() {
@@ -45,13 +58,13 @@ public class BatchOwnerTest extends BaseClassTest {
 
     @Test(priority = 1, description = "TC-BO-002: Batch Owner dashboard shows all 4 cohort summary cards")
     public void testDashboardShowsCohortSummaryCards() {
-        Assert.assertTrue(dashPage.isTotalCohortsCardVisible(),
+        softAssert.assertTrue(dashPage.isTotalCohortsCardVisible(),
                 AppConstants.CARD_TOTAL_COHORTS + " card should be visible");
-        Assert.assertTrue(dashPage.isActiveCohortsCardVisible(),
+        softAssert.assertTrue(dashPage.isActiveCohortsCardVisible(),
                 AppConstants.CARD_ACTIVE + " card should be visible");
-        Assert.assertTrue(dashPage.isCompletedCohortsCardVisible(),
+        softAssert.assertTrue(dashPage.isCompletedCohortsCardVisible(),
                 AppConstants.CARD_COMPLETED + " card should be visible");
-        Assert.assertTrue(dashPage.isUpcomingCohortsCardVisible(),
+        softAssert.assertTrue(dashPage.isUpcomingCohortsCardVisible(),
                 AppConstants.CARD_UPCOMING + " card should be visible");
 
         System.out.println("PASS - All " + AppConstants.SYSTEM_CONFIG_CARD_COUNT
@@ -81,7 +94,7 @@ public class BatchOwnerTest extends BaseClassTest {
         dashPage.waitForCohortsTableToSettle(AppConstants.TABLE_SETTLE_FAST);
 
         List<WebElement> filteredRows = dashPage.getCohortsTableRows();
-        Assert.assertFalse(filteredRows.isEmpty(),
+        softAssert.assertFalse(filteredRows.isEmpty(),
                 "Search with term '" + searchTerm + "' should return at least one result");
         System.out.println("PASS - Search '" + searchTerm + "' filtered table to "
                 + filteredRows.size() + " rows.");
@@ -89,7 +102,7 @@ public class BatchOwnerTest extends BaseClassTest {
         searchBar.clear();
         dashPage.waitForCohortsTableToSettle(AppConstants.TABLE_SETTLE_FAST);
         List<WebElement> restoredRows = dashPage.getCohortsTableRows();
-        Assert.assertFalse(restoredRows.isEmpty(),
+        softAssert.assertFalse(restoredRows.isEmpty(),
                 "Clearing the search should restore all cohort rows");
         System.out.println("PASS - Search cleared. Full list restored with "
                 + restoredRows.size() + " rows.");
@@ -109,7 +122,7 @@ public class BatchOwnerTest extends BaseClassTest {
                  .clickLoginButton();
 
         String alertText = loginPage.acceptAlertAndGetMessage();
-        Assert.assertEquals(alertText, AppConstants.ALERT_ENTER_POC_ID,
+        softAssert.assertEquals(alertText, AppConstants.ALERT_ENTER_POC_ID,
                 "Alert should say: " + AppConstants.ALERT_ENTER_POC_ID);
         System.out.println("PASS - Validation alert shown for missing POC ID: " + alertText);
     }

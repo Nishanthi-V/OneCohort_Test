@@ -10,7 +10,7 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.testng.Assert;
+// SoftAssert accessed via context.softAssert (injected by Hooks.setUp)
 
 public class LoginSteps {
 
@@ -121,13 +121,13 @@ public class LoginSteps {
     @Then("I should see alert {string}")
     public void iShouldSeeAlert(String expectedMessage) {
         String actual = loginPage.acceptAlertAndGetMessage();
-        Assert.assertEquals(actual, expectedMessage, "Alert message mismatch");
+        context.softAssert.assertEquals(actual, expectedMessage, "Alert message mismatch");
     }
 
     @Then("I should be redirected to the super admin dashboard")
     public void iShouldBeRedirectedToSuperAdminDashboard() {
         context.getWait().until(ExpectedConditions.urlContains(AppConstants.URL_SUPER_ADMIN));
-        Assert.assertTrue(context.driver.getCurrentUrl().contains(AppConstants.URL_SUPER_ADMIN),
+        context.softAssert.assertTrue(context.driver.getCurrentUrl().contains(AppConstants.URL_SUPER_ADMIN),
                 "URL should contain " + AppConstants.URL_SUPER_ADMIN
                 + ". Got: " + context.driver.getCurrentUrl());
     }
@@ -135,7 +135,7 @@ public class LoginSteps {
     @Then("I should be redirected to the manager dashboard")
     public void iShouldBeRedirectedToManagerDashboard() {
         context.getWait().until(ExpectedConditions.urlContains(AppConstants.URL_MANAGER));
-        Assert.assertTrue(context.driver.getCurrentUrl().contains(AppConstants.URL_MANAGER),
+        context.softAssert.assertTrue(context.driver.getCurrentUrl().contains(AppConstants.URL_MANAGER),
                 "URL should contain " + AppConstants.URL_MANAGER
                 + ". Got: " + context.driver.getCurrentUrl());
     }
@@ -143,7 +143,7 @@ public class LoginSteps {
     @Then("I should be redirected to the leader dashboard")
     public void iShouldBeRedirectedToLeaderDashboard() {
         context.getWait().until(ExpectedConditions.urlContains(AppConstants.URL_LEADER));
-        Assert.assertTrue(context.driver.getCurrentUrl().contains(AppConstants.URL_LEADER),
+        context.softAssert.assertTrue(context.driver.getCurrentUrl().contains(AppConstants.URL_LEADER),
                 "URL should contain " + AppConstants.URL_LEADER
                 + ". Got: " + context.driver.getCurrentUrl());
     }
@@ -151,7 +151,7 @@ public class LoginSteps {
     @Then("I should be redirected to the batch owner dashboard")
     public void iShouldBeRedirectedToBatchOwnerDashboard() {
         context.getWait().until(d -> !d.getCurrentUrl().contains("login"));
-        Assert.assertTrue(context.driver.getCurrentUrl().contains(AppConstants.URL_BATCH_OWNER),
+        context.softAssert.assertTrue(context.driver.getCurrentUrl().contains(AppConstants.URL_BATCH_OWNER),
                 "URL should contain " + AppConstants.URL_BATCH_OWNER
                 + ". Got: " + context.driver.getCurrentUrl());
     }
@@ -159,7 +159,7 @@ public class LoginSteps {
     @Then("I should be redirected to the CR dashboard")
     public void iShouldBeRedirectedToCRDashboard() {
         context.getWait().until(ExpectedConditions.urlContains(AppConstants.URL_CR));
-        Assert.assertTrue(context.driver.getCurrentUrl().contains(AppConstants.URL_CR),
+        context.softAssert.assertTrue(context.driver.getCurrentUrl().contains(AppConstants.URL_CR),
                 "URL should contain " + AppConstants.URL_CR
                 + ". Got: " + context.driver.getCurrentUrl());
     }
@@ -167,7 +167,7 @@ public class LoginSteps {
     @Then("the URL should contain {string}")
     public void theUrlShouldContain(String urlFragment) {
         context.getWait().until(ExpectedConditions.urlContains(urlFragment));
-        Assert.assertTrue(context.driver.getCurrentUrl().contains(urlFragment),
+        context.softAssert.assertTrue(context.driver.getCurrentUrl().contains(urlFragment),
                 "URL should contain " + urlFragment + ". Got: " + context.driver.getCurrentUrl());
     }
 }

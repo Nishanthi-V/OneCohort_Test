@@ -6,7 +6,7 @@ import com.cts.mfrp.onecohort.pages.batchowners.BatchOwnerDashboardPage;
 import com.cts.mfrp.onecohort.utils.TestDataProvider;
 import io.cucumber.java.en.*;
 import org.openqa.selenium.WebElement;
-import org.testng.Assert;
+// SoftAssert accessed via context.softAssert (injected by Hooks.setUp)
 
 import java.util.List;
 
@@ -38,7 +38,7 @@ public class BatchOwnerSteps {
             case "Upcoming"      -> getDashPage().isUpcomingCohortsCardVisible();
             default -> throw new IllegalArgumentException("Unknown card: " + cardName);
         };
-        Assert.assertTrue(visible, "'" + cardName + "' card should be visible");
+        context.softAssert.assertTrue(visible, "'" + cardName + "' card should be visible");
     }
 
     // TC-BO-005 ── Search functionality (all wait times from AppConstants) ─────
@@ -91,7 +91,7 @@ public class BatchOwnerSteps {
     @Then("the cohorts table should have at least {int} row")
     public void theCohortsTableShouldHaveAtLeastRow(int minRows) {
         List<WebElement> rows = getDashPage().getCohortsTableRows();
-        Assert.assertFalse(rows.isEmpty(),
+        context.softAssert.assertFalse(rows.isEmpty(),
                 "Cohorts table should have at least " + minRows
                 + " row(s). Found: " + rows.size());
     }
